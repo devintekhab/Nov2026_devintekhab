@@ -1,0 +1,8 @@
+-name: Install ngnix into the pathnex server 
+ hosts : all
+ become : yes
+tasks: 
+ -name : Install ngnix
+  yum :
+    name: ngnix
+    state : present
