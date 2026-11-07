@@ -1,0 +1,23 @@
+Day 07 - Automating Cloud infrastracture with terraform & ansible 
+
+ 🔹 Ansible - setup Nginx with custom config
+
+ name: Setup Ngnix with custom config hosts: all become:yes tasks:
+ name: Install ngnix yum:name:ngnix state:present
+ 
+ name:Copy custom ngnix.conf copy:src ngnix.conf dest:/etc/ngnix/ngnix.conf
+
+ name: Start ngnix service
+ service: name: ngnix state:started enabled:yes
+
+🔹 Terraform Provision EC2 With IAM Role resources "aws_iam_role" "ec2_role" 
+{
+  name = devintekhab_ec2_role"
+  assume_role_policy = jsoncode({Version:2012-10-17 Statement = [{Action:"sts:AssumeRole" Effect='Allow" Principle ={Service = "ec2.amazonaws.com"}}]})
+
+}
+
+resources "aws_instance" "devintekhab_ec2" {ami= "ami-0abcd123abcd456abcd" instance_type="t2.medium" iam_instance_profile = aws_iam_role.ec2.role.name tags = {Name: "devintekhab-EC2"}}
+
+ 🔹kubernets - ConfigMap and secret Management apiVersion:v1 kind:ConfigMap
+ metadata:name: pathnex-config data:app.properties | key=value
