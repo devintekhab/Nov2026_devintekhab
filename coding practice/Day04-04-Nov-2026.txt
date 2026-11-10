@@ -1,0 +1,33 @@
+day04 - basic ci/cd concepts with jenkins and gitlab
+
+🔹jenkinsfile - basic Pipeline pipeline{agenet any stages {stage("Build) {steps {echo "Building projects"} } stage("Test){steps {echo "Running test}} stage('Deploy'){steps {echo 'deploying application'}}}}
+
+
+🔹Gitlab CI/CD - basic pipeline stages
+stage 1 - build 
+stage 2 - test
+stage 3 - deploy
+build:stage:build script: -echo "building projects"
+test:stage:test:script: -echo "running test"
+deploy:stage:deploy script: -echo "deploying appliaction"
+
+🔹Ansible - install and configure ngnix
+name: install and configure ngnix hosts:all become:yes tasks:
+
+
+
+name:install ngnix yum:name:ngnix:present
+name:configure ngnix template:src:ngnix.confc.j2 dest:/ect/ngnix/ngnix.conf
+name:start ngnix server service:name:ngnix state:started enabled:yes
+
+🔹Terraform - ec2 with security group reaurces "aws_security_group""example"
+ {
+    name="example_security_group"
+    description="allow ssh and http"
+    ingress {from_port=22 to_port = 22 protocol = "tcp" 
+    cidr_blocks=['0.0.0.0/0']} 
+    ingress {from_port=80 to_port=80 protocol="tcp" cidr_block=['0.0.0.0/0']}
+    egress {from_port = 0 to_port=0 protocol='1' cidr_block=['0.0.0.0/0']}
+}
+
+
