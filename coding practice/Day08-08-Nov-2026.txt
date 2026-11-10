@@ -1,0 +1,58 @@
+Day 08 - Introduction to docker to CI/CD pipeline
+🔹 Ansible - Install docker compose
+
+name: install docker compose hosts:all become:yes task:
+
+name:install dependencies yum: name:"python-pip" state:present
+
+name: install docker-compose pip: name:docker-compose 
+
+🔹Terraform -EC2 with Security group and ebs volume resources "aws_security_group" "allow_ssh_http" {name="allow_ssh_http" description = "allow SSH and HTTP access" ingress { from_port= 22 to_port 22 protocol ="tcp" cidr_block"=["0.0.0.0/0"]}}
+
+
+ingress {from_port= 80 to_port= 80 protocol ="tcp" cidr_block=["0.0.0.0/0"]}
+
+
+resource aws_instance "devintekhab_ec2" 
+{
+    ami = "ami-abc123bcd123acd123" instance_type = "t3.meduim"
+    security_group = [aws_security_group.allow_ssh_http.name]
+}
+ebs_block_device {
+    device_name="/dev/sdh"
+    volume_size=30
+}
+
+🔹 Kubernets - service with nodeport 
+   apiVersion: v1 kind: service metadata:name: devintekhab-service spec:type:Nodeport selector:app:devintekhab-app ports:protocol:TCP port:80 nodePort:3007
+
+ 🔹jenkins - Docker build and push pipeline
+ {
+    agent any stage
+     {
+        stage("Build docker image")
+        steps {
+            script {docker.build("devintekhab-app")}
+        }
+     }
+     stage("Push docker image")
+     {
+        steps {
+            script{
+                docker.withRegistery('https://docker.io','docker-credentials){
+                    docker.image('devintekhab-app').push('latest')
+                }
+            }
+        }
+     }
+ }
+
+
+🔹Gitlab CI/CD - build & push docker image stages
+
+step1- build
+step2- push
+
+build: stage:build script: -docker build -t devintekhab-app
+push: stage:push script: -docker login "$CI_REGISTERY_USER" -p "$CI_REGISTERY_PASSWORD" -docker push devintekhab-app
+
