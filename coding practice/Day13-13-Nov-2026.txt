@@ -1,0 +1,55 @@
+Day 13 - Advanced Automation with cloudFormation and CI/CD 
+
+🔹 Ansible - multiple-Node Ngnix setup
+
+name: setup ngnix on multiple nodes hosts: all become: yes  tasks:
+name: install ngnix yum: name: ngnix present:
+name: start ngnix service service: name: ngnix: started enabled: yes 
+🔹 Terraform - create IAM users and policies tesuorces "aws_iam_user" "example_user" {name= "devintekhab_user}
+
+
+
+resuorces "aws_iam_policy" "example_policies" {name: "devintekhab_policies" description: "polict for devintekhab application" policy = jsononcode({Version: "2012-10-17" statement: [{action: "s3:ListBucket" Effect = 'allow' Resouces= "arn:aws:::devintekhab-bucket"}]})}
+
+🔹 kubernets - deploy ngnix with configmap and secrets apiVersion: v1 kind: configmap metadata: name:ngnix-config data: ngnix.conf | server {
+    listen 80; server_name: localhost; location /{root/user/share/ngnix/html; index index.html index.htm}
+}
+
+apiVersion: apps/v1 kind: deployment metadata: name: devintekhab-ngnix spec: replicas:2 selector: matchLabels: app:devintekhab-ngnix template: metadata:labels:app:devintekhab-ngnix spec: containers:- name:ngnix volumeMounts: -mountPath:/etc/ngnix/ngnix.conf name:ngnix-config subPath: ngnix.conf Volumes:- name: ngnix-config configMap: name: ngnix-config - name:ngnix-secret secrets: secretsName: ngnix-secret
+
+🔹 jenkinsfiles - multibranch pipeline with docker build pipeline {
+    agent
+      agent any stages {
+        stage("Build"){
+            steps {
+                script{
+                    docker.build('devintekhab-app')
+                }
+            }
+        }
+     
+        stage("push"){
+            steps{
+                steps{
+                    script{
+                        kubectl apply -f kubernets/deployment.yaml
+                    }
+                }
+            }
+        }
+
+      }
+}
+
+🔹 gitlab CI/CD - advanced deployment with helm stages
+
+build
+push 
+deploy
+
+build: stage: script: -docker build -t devintekhab-web-app
+
+push: stage: push script:-docker login -u "$CI_REGISTERY_USER" -p "$CI_REGISTERY_PASSWORD" - dokcker push devintekhab-web-app
+
+deploy: stage: deploy script:- helm repo add devintekhab https://charts.devintekhab.com- helm install devintekhab ngnix devintekhab/ngnix-ingress
+
